@@ -61,6 +61,56 @@ export const api = {
       `/instruments/${canonicalId}/price`,
     ),
 
+  // Chat streaming via SSE
+  streamMessage: (
+    body: {
+      session_id?: string;
+      message: string;
+      mode: string;
+      canonical_id?: string;
+      timeframe?: string;
+    },
+    onEvent: (event: string, data: Record<string, unknown>) => void,
+  ): Promise<void> =>
+    new Promise((resolve, reject) => {
+      const token = localStorage.getItem('access_token');
+      fetch(`${API_BASE}/chat/stream`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(body),
+      })
+        .then(async (res) => {
+          if (!res.ok) throw new ApiError(res.status, res.statusText);
+          const reader = res.body?.getReader();
+          if (!reader) return resolve();
+          const decoder = new TextDecoder();
+          let buffer = '';
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop() ?? '';
+            let eventType = 'message';
+            for (const line of lines) {
+              if (line.startsWith('event:')) {
+                eventType = line.slice(6).trim();
+              } else if (line.startsWith('data:')) {
+                try {
+                  const data = JSON.parse(line.slice(5).trim());
+                  onEvent(eventType, data);
+                } catch { /* skip malformed */ }
+              }
+            }
+          }
+          resolve();
+        })
+        .catch(reject);
+    }),
+
   // Chat
   sendMessage: (body: {
     session_id?: string;

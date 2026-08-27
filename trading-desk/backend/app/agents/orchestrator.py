@@ -2,7 +2,9 @@
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable, Optional
+from typing import Any, AsyncIterator, Callable, Optional
+
+from app.agents.llm import AnthropicClient
 
 
 class AgentRole(str, Enum):
@@ -30,6 +32,7 @@ class AnalysisRequest:
     mode: str  # quick_scan | deep_analysis
     user_message: str
     chart_snapshots: Optional[dict[str, Any]] = None
+    price: Optional[dict[str, Any]] = None
 
 
 class AgentToolRegistry:
@@ -69,10 +72,21 @@ class TradingAgentOrchestrator:
     def __init__(self, tools: AgentToolRegistry) -> None:
         self.tools = tools
         self.transcript: list[AgentMessage] = []
+        self.llm = AnthropicClient()
 
     async def run_analysis(self, request: AnalysisRequest) -> dict[str, Any]:
         self.transcript = []
-        roles = self.QUICK_ROLES if request.mode == "quick_scan" else self.DEEP_ROLES
+
+        if request.mode == "quick_scan":
+            context = await self._build_context(request)
+            content = await self.llm.quick_scan(context)
+            self.transcript.append(AgentMessage(role=AgentRole.TECHNICAL_ANALYST, content=content))
+            return {
+                "published": False,
+                "quick_scan_response": content,
+                "transcript": self._serialize_transcript(),
+                "mode": request.mode,
+            }
 
         if request.mode == "deep_analysis" and not request.chart_snapshots:
             return {
@@ -83,43 +97,94 @@ class TradingAgentOrchestrator:
 
         context = await self._build_context(request)
 
-        if request.mode == "deep_analysis":
-            bull_case = await self._run_role(AgentRole.BULL_RESEARCHER, context)
-            bear_case = await self._run_role(AgentRole.BEAR_RESEARCHER, context)
-            synthesis = await self._run_debate(bull_case, bear_case, context)
-            context["debate_resolution"] = synthesis
+        bull_case = await self._run_role(AgentRole.BULL_RESEARCHER, context, request.mode)
+        bear_case = await self._run_role(AgentRole.BEAR_RESEARCHER, context, request.mode)
+        synthesis = await self._run_debate(bull_case, bear_case, context)
+        context["debate_resolution"] = synthesis
 
-        for role in roles:
+        for role in self.DEEP_ROLES:
             if role in (AgentRole.BULL_RESEARCHER, AgentRole.BEAR_RESEARCHER, AgentRole.DEBATE_MODERATOR):
                 continue
-            await self._run_role(role, context)
+            await self._run_role(role, context, request.mode)
 
         recommendation = await self._format_recommendation(request, context)
         return {
             "published": recommendation is not None,
             "recommendation": recommendation,
-            "transcript": [
-                {"role": m.role.value, "content": m.content, "metadata": m.metadata}
-                for m in self.transcript
-            ],
+            "transcript": self._serialize_transcript(),
             "mode": request.mode,
         }
 
+    async def run_analysis_stream(self, request: AnalysisRequest) -> AsyncIterator[dict[str, Any]]:
+        """SSE-friendly generator yielding role progress events."""
+        self.transcript = []
+
+        if request.mode == "quick_scan":
+            context = await self._build_context(request)
+            yield {"event": "role_start", "role": "technical_analyst"}
+            content = await self.llm.quick_scan(context)
+            self.transcript.append(AgentMessage(role=AgentRole.TECHNICAL_ANALYST, content=content))
+            yield {"event": "role_complete", "role": "technical_analyst", "content": content}
+            yield {"event": "complete", "published": False, "quick_scan_response": content}
+            return
+
+        if request.mode == "deep_analysis" and not request.chart_snapshots:
+            yield {"event": "error", "message": "Chart vision unavailable"}
+            return
+
+        context = await self._build_context(request)
+        all_roles = [
+            AgentRole.BULL_RESEARCHER,
+            AgentRole.BEAR_RESEARCHER,
+            AgentRole.TECHNICAL_ANALYST,
+            AgentRole.NEWS_SENTIMENT,
+            AgentRole.RISK_MANAGER,
+            AgentRole.TRADER,
+        ]
+
+        for role in all_roles:
+            yield {"event": "role_start", "role": role.value}
+            if role == AgentRole.BULL_RESEARCHER:
+                msg = await self._run_role(role, context, request.mode)
+                bear = await self._run_role(AgentRole.BEAR_RESEARCHER, context, request.mode)
+                synthesis = await self._run_debate(msg, bear, context)
+                context["debate_resolution"] = synthesis
+                yield {"event": "role_complete", "role": role.value, "content": msg.content}
+                yield {"event": "role_complete", "role": "bear_researcher", "content": bear.content}
+                yield {"event": "role_complete", "role": "debate_moderator", "content": synthesis}
+                continue
+            if role == AgentRole.BEAR_RESEARCHER:
+                continue
+            msg = await self._run_role(role, context, request.mode)
+            yield {"event": "role_complete", "role": role.value, "content": msg.content}
+
+        recommendation = await self._format_recommendation(request, context)
+        yield {
+            "event": "complete",
+            "published": recommendation is not None,
+            "recommendation": recommendation,
+            "transcript": self._serialize_transcript(),
+        }
+
     async def write_bot_rationale(self, bot_context: dict[str, Any]) -> dict[str, Any]:
-        msg = await self._run_role(AgentRole.BOT_RATIONALE_WRITER, bot_context)
+        msg = await self._run_role(AgentRole.BOT_RATIONALE_WRITER, bot_context, "deep_analysis")
         return {"rationale": msg.content, "metadata": msg.metadata}
 
     async def _build_context(self, request: AnalysisRequest) -> dict[str, Any]:
-        return {
+        ctx: dict[str, Any] = {
             "canonical_id": request.canonical_id,
             "timeframe": request.timeframe,
             "user_message": request.user_message,
             "chart_snapshots": request.chart_snapshots or {},
             "mode": request.mode,
         }
+        if request.price:
+            ctx["price"] = request.price
+            ctx["current_price"] = request.price.get("mid")
+        return ctx
 
-    async def _run_role(self, role: AgentRole, context: dict[str, Any]) -> AgentMessage:
-        content = self._simulate_role_output(role, context)
+    async def _run_role(self, role: AgentRole, context: dict[str, Any], mode: str) -> AgentMessage:
+        content = await self.llm.complete_role(role.value, context, mode)
         msg = AgentMessage(role=role, content=content)
         self.transcript.append(msg)
         return msg
@@ -127,18 +192,23 @@ class TradingAgentOrchestrator:
     async def _run_debate(
         self, bull: AgentMessage, bear: AgentMessage, context: dict[str, Any]
     ) -> str:
-        rounds = 2
-        for i in range(rounds):
+        for i in range(2):
+            round_content = await self.llm.complete_role(
+                "debate_moderator",
+                {**context, "bull_case": bull.content, "bear_case": bear.content, "round": i + 1},
+                "deep_analysis",
+            )
             self.transcript.append(
                 AgentMessage(
                     role=AgentRole.DEBATE_MODERATOR,
-                    content=f"Debate round {i + 1}: weighing bull vs bear arguments",
+                    content=round_content,
                     metadata={"round": i + 1},
                 )
             )
-        resolution = (
-            f"Moderator resolves: directional bias maintained from technical structure "
-            f"on {context['canonical_id']} {context['timeframe']}"
+        resolution = await self.llm.complete_role(
+            "debate_moderator",
+            {**context, "bull_case": bull.content, "bear_case": bear.content, "final": True},
+            "deep_analysis",
         )
         self.transcript.append(AgentMessage(role=AgentRole.DEBATE_MODERATOR, content=resolution))
         return resolution
@@ -146,46 +216,25 @@ class TradingAgentOrchestrator:
     async def _format_recommendation(
         self, request: AnalysisRequest, context: dict[str, Any]
     ) -> Optional[dict[str, Any]]:
-        if request.mode == "quick_scan":
-            return None  # Quick scan never produces tradeable recommendations
+        trader_msgs = [m for m in self.transcript if m.role == AgentRole.TRADER]
+        if not trader_msgs:
+            return None
 
-        # Structured output from Trader role — direction never WAIT
-        price = context.get("current_price", 1.0850)
-        atr_buffer = 0.0015
-        return {
-            "canonical_id": request.canonical_id,
-            "timeframe": request.timeframe,
-            "direction": "BUY",
-            "analytical_bias": "BUY",
-            "plan_type": "immediate",
-            "execution_status": "active_now",
-            "fill_rule": "market_price",
-            "entry_zone_low": price - 0.0005,
-            "entry_zone_high": price + 0.0005,
-            "preferred_entry": price,
-            "stop_loss": price - atr_buffer * 2,
-            "take_profits": [
-                {"level": 1, "price": price + atr_buffer * 2, "r_multiple": 1.0},
-                {"level": 2, "price": price + atr_buffer * 4, "r_multiple": 2.0},
-            ],
-            "invalidation_rule": "Close below structural support invalidates long thesis",
-            "activation_rule": None,
-            "activation_condition": None,
-            "validity_candles": 12,
-            "analysis_mode": request.mode,
-            "confidence_label": "Insufficient data",
-            "similar_past_cases": {"count": 0, "summary": "No similar cases found"},
-        }
+        parsed = await self.llm.parse_recommendation(trader_msgs[-1].content, context)
+        if parsed:
+            parsed["canonical_id"] = request.canonical_id
+            parsed["timeframe"] = request.timeframe
+            parsed["analysis_mode"] = request.mode
+            return parsed
 
-    def _simulate_role_output(self, role: AgentRole, context: dict[str, Any]) -> str:
-        symbol = context.get("canonical_id", "EUR_USD")
-        prompts = {
-            AgentRole.TECHNICAL_ANALYST: f"Technical analysis on {symbol}: structure and levels assessed from chart vision and OHLC data.",
-            AgentRole.RISK_MANAGER: "Risk assessment: stop placement uses ATR buffer beyond structural invalidation.",
-            AgentRole.NEWS_SENTIMENT: "News/sentiment scan complete — no blocking high-impact events in immediate window.",
-            AgentRole.BULL_RESEARCHER: "Bull case: momentum and structure support long bias.",
-            AgentRole.BEAR_RESEARCHER: "Bear case: counter-arguments noted but do not flip analytical direction.",
-            AgentRole.TRADER: "Final structured recommendation formatted per data model.",
-            AgentRole.BOT_RATIONALE_WRITER: "Bot rationale: rules fired, session context, why this bar qualifies.",
-        }
-        return prompts.get(role, f"{role.value} analysis complete")
+        default = self.llm._default_recommendation(context)
+        default["canonical_id"] = request.canonical_id
+        default["timeframe"] = request.timeframe
+        default["analysis_mode"] = request.mode
+        return default
+
+    def _serialize_transcript(self) -> list[dict[str, Any]]:
+        return [
+            {"role": m.role.value, "content": m.content, "metadata": m.metadata}
+            for m in self.transcript
+        ]

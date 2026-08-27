@@ -20,5 +20,6 @@ sse-starlette==2.2.1
 websockets==14.1
 Pillow==11.1.0
 python-telegram-bot==21.9
+matplotlib==3.10.0
 pytest==8.3.4
 pytest-asyncio==0.25.0

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { ArtifactRenderer } from '@/components/artifacts/ArtifactRenderer';
 import { useTranslation } from 'react-i18next';
 import { api } from '@/api/client';
 import { useChatStore } from '@/stores/uiStore';
@@ -99,17 +99,7 @@ export function AskPage() {
               msg.role === 'user' ? 'bg-accent text-white' : 'bg-surface-overlay'
             }`}>
               <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-              {msg.artifacts?.map((art, i) => (
-                art.type === 'recommendation_card' ? (
-                  <Link
-                    key={i}
-                    to={`/recommendations/${(art.data as { id: string }).id}`}
-                    className="mt-2 block rounded-lg border border-accent/30 bg-accent-muted p-3 text-sm hover:border-accent"
-                  >
-                    📋 Recommendation — {(art.data as { direction?: string }).direction}
-                  </Link>
-                ) : null
-              ))}
+              {msg.artifacts && <ArtifactRenderer artifacts={msg.artifacts} />}
             </div>
           </div>
         ))}

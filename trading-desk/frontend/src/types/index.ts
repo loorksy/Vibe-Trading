@@ -114,6 +114,20 @@ export interface Candle {
   volume?: number;
 }
 
+export interface Period {
+  multiplier: number;
+  timespan: string;
+  text: string;
+}
+
+export interface SymbolInfo {
+  ticker: string;
+  name?: string;
+  shortName?: string;
+  market?: string;
+  pricePrecision?: number;
+}
+
 export type AnalysisMode = 'quick_scan' | 'deep_analysis';
 
 export interface AgentLogEntry {

@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useUiStore } from '@/stores/uiStore';
 import { SymbolPicker } from '@/components/SymbolPicker';
+import { KLineChartPanel } from '@/components/KLineChartPanel';
 import { ChartPanel } from '@/components/ChartPanel';
 
 const TIMEFRAMES = ['15m', '1h', '4h', '1d'];
@@ -13,6 +14,7 @@ export function ChartPage() {
   const selectedSymbol = useUiStore((s) => s.selectedSymbol);
   const setSelectedSymbol = useUiStore((s) => s.setSelectedSymbol);
   const [timeframe, setTimeframe] = useState('1h');
+  const [usePro, setUsePro] = useState(true);
 
   useEffect(() => {
     if (symbol) setSelectedSymbol(symbol);
@@ -31,7 +33,14 @@ export function ChartPage() {
           </select>
         </div>
       </div>
-      <ChartPanel canonicalId={canonicalId} timeframe={timeframe} height={500} />
+      {usePro ? (
+        <KLineChartPanel canonicalId={canonicalId} timeframe={timeframe} height={500} />
+      ) : (
+        <ChartPanel canonicalId={canonicalId} timeframe={timeframe} height={500} />
+      )}
+      <button onClick={() => setUsePro(!usePro)} className="mt-2 text-xs text-gray-500 hover:text-gray-300">
+        {usePro ? 'Switch to canvas fallback' : 'Switch to KLineChart Pro'}
+      </button>
     </div>
   );
 }

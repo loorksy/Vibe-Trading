@@ -6,6 +6,7 @@ from sqlalchemy import text
 
 from app.api import auth, chat, health, instruments, platform, trading
 from app.config import get_settings
+from app.core.rate_limit import RateLimitMiddleware
 from app.database import engine
 
 
@@ -35,6 +36,7 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    app.add_middleware(RateLimitMiddleware)
     app.include_router(health.router)
     app.include_router(auth.router, prefix="/api")
     app.include_router(instruments.router, prefix="/api")
