@@ -1,24 +1,29 @@
 from datetime import datetime, timedelta, timezone
-from typing import Any, Optional
+from typing import Optional
 
-from jose import JWTError, jwt
-from passlib.context import CryptContext
+import bcrypt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jose import JWTError, jwt
 
 from app.config import get_settings
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer(auto_error=False)
 settings = get_settings()
 
+# Precomputed dev hash for "operator" — avoids bcrypt init at import time
+_DEV_HASH = bcrypt.hashpw(b"operator", bcrypt.gensalt()).decode()
+
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
 
 def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
+    try:
+        return bcrypt.checkpw(plain.encode(), hashed.encode())
+    except Exception:
+        return False
 
 
 def create_access_token(subject: str) -> str:
@@ -51,4 +56,4 @@ async def get_current_user(
 
 def get_default_password_hash() -> str:
     """Dev fallback when OPERATOR_PASSWORD_HASH is unset."""
-    return hash_password("operator")
+    return _DEV_HASH
