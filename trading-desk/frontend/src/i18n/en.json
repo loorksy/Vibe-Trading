@@ -1,0 +1,154 @@
+{
+  "nav": {
+    "ask": "Ask",
+    "today": "Scan Today",
+    "build": "Build",
+    "chart": "Chart",
+    "recommendations": "Recommendations",
+    "watchlist": "Watchlist",
+    "exposure": "Exposure",
+    "account": "Account",
+    "strategies": "Strategies",
+    "demo": "Demo",
+    "bots": "Bots",
+    "memory": "Memory",
+    "review": "Review",
+    "settings": "Settings",
+    "history": "History",
+    "logout": "Logout"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "search": "Search",
+    "noData": "No data available",
+    "selectSymbol": "Select Symbol",
+    "timeframe": "Timeframe"
+  },
+  "auth": {
+    "login": "Sign In",
+    "username": "Username",
+    "password": "Password",
+    "loginTitle": "Trading Desk",
+    "loginSubtitle": "AI Trading Assistant Platform"
+  },
+  "ask": {
+    "title": "Ask the Assistant",
+    "placeholder": "Ask about a market, setup, or trade idea...",
+    "send": "Send",
+    "quickScan": "Quick Scan",
+    "deepAnalysis": "Deep Analysis",
+    "agentLog": "Agent Log",
+    "newChat": "New Chat"
+  },
+  "today": {
+    "title": "Scan Today",
+    "news": "Market News",
+    "calendar": "Economic Calendar",
+    "benchmark": "Benchmark"
+  },
+  "build": {
+    "title": "Build Strategy",
+    "subtitle": "Create and optimize trading strategies",
+    "newStrategy": "New Strategy",
+    "runBacktest": "Run Backtest"
+  },
+  "chart": {
+    "title": "Chart",
+    "placeholder": "Chart loading..."
+  },
+  "recommendations": {
+    "title": "Recommendations",
+    "direction": "Direction",
+    "entry": "Entry Zone",
+    "stop": "Stop Loss",
+    "targets": "Take Profits",
+    "confidence": "Confidence",
+    "execute": "Execute Trade",
+    "convertBot": "Convert to Bot"
+  },
+  "watchlist": {
+    "title": "Watchlist",
+    "add": "Add Symbol",
+    "remove": "Remove"
+  },
+  "exposure": {
+    "title": "Portfolio Exposure"
+  },
+  "account": {
+    "title": "Account",
+    "connect": "Connect Broker",
+    "accounts": "Broker Accounts",
+    "aliases": "Symbol Aliases"
+  },
+  "strategies": {
+    "title": "Strategies",
+    "new": "New Strategy",
+    "optimize": "Optimize",
+    "versions": "Versions"
+  },
+  "bots": {
+    "title": "Bots",
+    "activate": "Activate",
+    "stop": "Stop",
+    "promoteLive": "Promote to Live",
+    "running": "Running",
+    "stopped": "Stopped"
+  },
+  "memory": {
+    "title": "Memory & Lessons"
+  },
+  "review": {
+    "title": "Performance Review"
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": "Theme",
+    "language": "Language",
+    "dark": "Dark",
+    "light": "Light",
+    "risk": "Risk per Trade (R)",
+    "spreadLimit": "Spread Limit (pips)"
+  },
+  "history": {
+    "title": "Execution History"
+  },
+  "disclaimer": {
+    "text": "Personal analysis only — not fund management advice. Trading involves substantial risk."
+  },
+  "feedHealth": {
+    "unreliable": "Market data feed may be unreliable — verify prices before trading.",
+    "healthy": "Feed healthy"
+  },
+  "emergency": {
+    "title": "Emergency Kill Switch",
+    "button": "KILL",
+    "confirm": "This will halt all bots and block new executions. Are you sure?",
+    "halted": "Emergency halt active"
+  },
+  "modals": {
+    "connectBroker": {
+      "title": "Connect Broker",
+      "name": "Account Name",
+      "accountType": "Account Type",
+      "metaapiId": "MetaApi Account ID",
+      "brokerServer": "Broker Server",
+      "token": "MetaApi Token",
+      "connect": "Connect"
+    },
+    "symbolPicker": {
+      "title": "Select Symbol",
+      "search": "Search instruments..."
+    },
+    "executeTrade": {
+      "title": "Execute Trade",
+      "account": "Broker Account",
+      "lotSize": "Lot Size",
+      "execute": "Place Order"
+    }
+  }
+}
