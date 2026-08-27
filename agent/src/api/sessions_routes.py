@@ -188,6 +188,8 @@ def _get_goal_store():
 
 _PROPOSAL_TOOL_NAME = "propose_mandate_profiles"
 _PROPOSAL_ID_RE = re.compile(r'"proposal_id"\s*:\s*"(mp_[0-9a-f]{32})"')
+_TRADE_REC_TOOL_NAME = "propose_trade_recommendation"
+_TRADE_REC_ID_RE = re.compile(r'"recommendation_id"\s*:\s*"(tr_[0-9a-f]{32})"')
 _SCHEDULED_PROPOSAL_TOOL_NAME = "scheduled_research"
 _SCHEDULED_PROPOSAL_ID_RE = re.compile(
     r'"proposal_id"\s*:\s*"(srp_[0-9a-f]{32})"'
@@ -233,6 +235,33 @@ def _mandate_proposal_frame_from_tool_result(event: Any) -> Optional[str]:
         session_id=getattr(event, "session_id", "") or "",
     )
     return frame.to_sse()
+
+
+def _trade_recommendation_frame_from_tool_result(event: Any) -> Optional[str]:
+    """Build a trade.recommendation SSE frame from a propose tool_result."""
+    data = getattr(event, "data", None)
+    if getattr(event, "event_type", None) != "tool_result" or not isinstance(data, dict):
+        return None
+    if data.get("tool") != _TRADE_REC_TOOL_NAME or data.get("status") != "ok":
+        return None
+    match = _TRADE_REC_ID_RE.search(str(data.get("preview") or ""))
+    if not match:
+        return None
+    try:
+        from src.trade_recommendation.store import load_recommendation, public_recommendation
+
+        recommendation = public_recommendation(load_recommendation(match.group(1)))
+    except Exception:  # pragma: no cover - relay must never break the stream
+        logger.debug("trade.recommendation reload failed for %s", match.group(1), exc_info=True)
+        return None
+
+    from src.session.events import SSEEvent
+
+    return SSEEvent(
+        event_type="trade.recommendation",
+        data=recommendation,
+        session_id=getattr(event, "session_id", "") or "",
+    ).to_sse()
 
 
 def _scheduled_proposal_frame_from_tool_result(event: Any) -> Optional[str]:
@@ -823,6 +852,9 @@ def register_sessions_routes(app: FastAPI) -> None:
                 scheduled_relay = _scheduled_proposal_frame_from_tool_result(event)
                 if scheduled_relay is not None:
                     yield scheduled_relay
+                trade_relay = _trade_recommendation_frame_from_tool_result(event)
+                if trade_relay is not None:
+                    yield trade_relay
                 live_action = _live_action_frame_from_tool_result(event)
                 if live_action is not None:
                     yield live_action

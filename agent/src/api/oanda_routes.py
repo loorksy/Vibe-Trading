@@ -27,6 +27,13 @@ def list_instruments(q: str = Query("", alias="q")) -> list[dict[str, Any]]:
     return items
 
 
+@router.get("/feeds/health")
+def feed_health(canonical_id: str = Query("EUR_USD")) -> dict[str, Any]:
+    from src.tools.check_feed_health_tool import check_feed_divergence
+
+    return check_feed_divergence(canonical_id)
+
+
 @router.get("/instruments/{canonical_id}/price")
 def get_price(canonical_id: str) -> dict[str, Any]:
     client = OandaClient()

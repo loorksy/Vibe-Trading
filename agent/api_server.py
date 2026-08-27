@@ -204,6 +204,7 @@ from src.api.sessions_routes import (  # noqa: F401, E402
     _goal_store,
     _live_action_frame_from_tool_result,
     _mandate_proposal_frame_from_tool_result,
+    _trade_recommendation_frame_from_tool_result,
 )
 
 # --- System ---
@@ -263,6 +264,9 @@ register_connection_routes(app)
 
 from src.api.oanda_routes import register_oanda_routes  # noqa: E402
 register_oanda_routes(app)
+
+from src.api.trade_routes import register_trade_routes  # noqa: E402
+register_trade_routes(app, require_auth)
 
 from src.api.live_routes import (  # noqa: F401, E402
     CommitMandateRequest,

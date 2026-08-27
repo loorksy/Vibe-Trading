@@ -501,6 +501,7 @@ _CONNECTOR_INSTRUMENT = {
     "futu": ("equity", None),
     "trading212": ("equity", None),
     "etoro": ("equity", None),
+    "metaapi": ("forex", "forex"),
 }
 
 
@@ -522,6 +523,11 @@ def _order_classification(connector: str, symbol: str):
         # Forex pairs → (FOREX, FOREX); metals/indices/anything else → (CFD,
         # None), which the mandate admits only via an explicit "cfd" allowance.
         return classify_mt5_symbol(symbol)
+
+    if connector == "metaapi":
+        from src.trading.connectors.metaapi.symbols import classify_metaapi_symbol
+
+        return classify_metaapi_symbol(symbol)
 
     instrument_name, asset_name = _CONNECTOR_INSTRUMENT.get(connector, ("equity", None))
     instrument = InstrumentType(instrument_name)
@@ -575,6 +581,11 @@ def place_order(
         "order_type": order_type,
         "limit_price": limit_price,
         "time_in_force": time_in_force,
+        **{
+            key: value
+            for key, value in overrides.items()
+            if key not in {"connection_id", "profile_id"} and value is not None
+        },
     }
 
     if profile.environment == "paper":

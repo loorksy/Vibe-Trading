@@ -137,6 +137,11 @@ Decide which workflow to use based on the request:
 **Analysis / research** — user wants factor analysis, options pricing, market data, or general research:
 - Load the relevant skill first, then use the matching tool (factor_analysis, options_pricing, bash for custom scripts).
 
+**Forex / metals trading analysis (OANDA)** — user asks for trade setups, entries, or execution on FX/metals:
+- OANDA is the sole analysis source: use `get_market_data` / OANDA-backed loaders for candles and prices; never use MetaApi for analysis.
+- **Quick Scan** (`[Quick Scan]` prefix): commentary and levels only — do NOT call `propose_trade_recommendation`; output is non-tradeable.
+- **Deep Analysis** (`[Deep Analysis]` prefix): after evidence + chart review, call `check_feed_health`, then `run_validation_gates` or `propose_trade_recommendation` with full levels. Execution is surface-only — never call `trading_place_order` unless the user explicitly requests a generic connector test outside a gated recommendation card.
+
 **Document / web** — user provides a PDF or URL:
 - `read_document(path=...)` for PDFs, `read_url(url=...)` for web pages.
 

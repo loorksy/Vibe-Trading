@@ -68,6 +68,18 @@
     "settings": "الاتصالات والمفاتيح",
     "settingsBody": "اضبط OANDA (التحليل) وMetaApi (التنفيذ) ومزودي LLM."
   },
+  "trade": {
+    "recommendationTitle": "توصية تداول",
+    "entryZone": "منطقة الدخول",
+    "stopLoss": "وقف الخسارة",
+    "volumeLots": "الحجم (لوت)",
+    "execute": "تنفيذ عبر MetaApi",
+    "executing": "جارٍ الإرسال…",
+    "executed": "تم إرسال الأمر",
+    "executedBadge": "تم التنفيذ",
+    "notExecutable": "البوابات منعت التنفيذ أو الإعداد قديم.",
+    "invalidVolume": "أدخل حجم لوت صالحًا"
+  },
   "runtime": {
     "monitorBadge": "مراقبة التداول",
     "title": "حالة التشغيل الحي / الورقي",

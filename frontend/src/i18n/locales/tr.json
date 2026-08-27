@@ -64,6 +64,18 @@
     "settings": "Bağlantılar ve anahtarlar",
     "settingsBody": "OANDA (analiz), MetaApi (yürütme) ve LLM sağlayıcılarını yapılandırın."
   },
+  "trade": {
+    "recommendationTitle": "İşlem önerisi",
+    "entryZone": "Giriş bölgesi",
+    "stopLoss": "Zarar durdur",
+    "volumeLots": "Hacim (lot)",
+    "execute": "MetaApi ile yürüt",
+    "executing": "Gönderiliyor…",
+    "executed": "Emir gönderildi",
+    "executedBadge": "Yürütüldü",
+    "notExecutable": "Kapılar yürütmeyi engelledi veya kurulum eskidi.",
+    "invalidVolume": "Geçerli bir lot boyutu girin"
+  },
   "agent": {
     "quickScan": "Hızlı Tarama",
     "deepAnalysis": "Derin Analiz",

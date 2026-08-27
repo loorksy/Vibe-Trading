@@ -324,6 +324,56 @@ export interface OandaInstrument {
   tradable: boolean;
 }
 
+export interface FeedHealthResponse {
+  canonical_id: string;
+  oanda_ok: boolean;
+  oanda_mid: number | null;
+  twelve_data_mid: number | null;
+  divergence_pct: number | null;
+  divergence_threshold_pct: number;
+  reliable: boolean;
+  source: string;
+}
+
+export interface TradeGateResult {
+  gate: string;
+  passed: boolean;
+  reason: string;
+  action?: string | null;
+}
+
+export interface TradeRecommendation {
+  type?: string;
+  recommendation_id: string;
+  session_id?: string;
+  canonical_id: string;
+  display_symbol: string;
+  timeframe: string;
+  direction: "BUY" | "SELL";
+  analytical_bias?: string;
+  plan_type: string;
+  execution_status: string;
+  analysis_mode: string;
+  entry_zone?: [number, number];
+  preferred_entry?: number;
+  stop_loss?: number;
+  take_profits?: Array<{ price: number; size_pct?: number }>;
+  gate_results: TradeGateResult[];
+  publishable: boolean;
+  created_at?: number;
+  expires_at?: number;
+  status: string;
+}
+
+export interface ExecuteTradeRequest {
+  recommendation_id: string;
+  profile_id?: string;
+  volume: number;
+  session_id?: string;
+  consent_ack: boolean;
+  execution_symbol?: string;
+}
+
 export const api = {
   uploadFile,
   getCorrelation: (codes: string, days: number, method: "pearson" | "spearman") =>
@@ -399,6 +449,15 @@ export const api = {
   listOandaInstruments: (q?: string) =>
     request<OandaInstrument[]>(
       `/api/oanda/instruments${q ? `?q=${encodeURIComponent(q)}` : ""}`,
+    ),
+  getFeedHealth: (canonicalId = "EUR_USD") =>
+    request<FeedHealthResponse>(
+      `/api/oanda/feeds/health?canonical_id=${encodeURIComponent(canonicalId)}`,
+    ),
+  executeTrade: (body: ExecuteTradeRequest) =>
+    request<{ status: string; recommendation: TradeRecommendation; execution: Record<string, unknown> }>(
+      "/executions",
+      { method: "POST", body: JSON.stringify(body) },
     ),
   listScheduledRuns: (signal?: AbortSignal) => request<ScheduledRun[]>("/scheduled-runs", { signal }),
   createScheduledRun: (body: CreateScheduledRunRequest) =>

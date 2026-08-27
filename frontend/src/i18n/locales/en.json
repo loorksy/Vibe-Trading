@@ -73,6 +73,18 @@
     "settings": "Connections & keys",
     "settingsBody": "Configure OANDA (analysis), MetaApi (execution), and LLM providers."
   },
+  "trade": {
+    "recommendationTitle": "Trade recommendation",
+    "entryZone": "Entry zone",
+    "stopLoss": "Stop loss",
+    "volumeLots": "Volume (lots)",
+    "execute": "Execute via MetaApi",
+    "executing": "Submitting…",
+    "executed": "Order submitted",
+    "executedBadge": "Executed",
+    "notExecutable": "Gates blocked execution or the setup is stale.",
+    "invalidVolume": "Enter a valid lot size"
+  },
   "runtime": {
     "monitorBadge": "Runtime Monitor",
     "title": "Live / Paper Runtime Status",

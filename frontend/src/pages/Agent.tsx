@@ -10,7 +10,7 @@ import {
   type StoredAgentMessage,
 } from "@/stores/agent";
 import { useSSE } from "@/hooks/useSSE";
-import { ApiError, AUTH_REQUIRED_MESSAGE, api, isAuthRequiredError, type GoalSnapshot, type MandateProposal, type MandateCommitted, type ScheduledResearchProposal, type LiveAction, type LiveHalted, type LLMSettings } from "@/lib/api";
+import { ApiError, AUTH_REQUIRED_MESSAGE, api, isAuthRequiredError, type GoalSnapshot, type MandateProposal, type MandateCommitted, type ScheduledResearchProposal, type LiveAction, type LiveHalted, type LLMSettings, type TradeRecommendation } from "@/lib/api";
 import {
   extractUploadedAttachments,
   prependUploadedAttachments,
@@ -29,6 +29,7 @@ import { ConversationTimeline } from "@/components/chat/ConversationTimeline";
 import { ActivityLine } from "@/components/chat/ActivityLine";
 import { MandateProposalCard } from "@/components/chat/MandateProposalCard";
 import { ScheduledResearchProposalCard } from "@/components/chat/ScheduledResearchProposalCard";
+import { TradeRecommendationCard } from "@/components/chat/TradeRecommendationCard";
 import { SwarmStatusCard } from "@/components/chat/SwarmStatusCard";
 import {
   Composer,
@@ -181,7 +182,12 @@ interface ScheduledProposalItem {
   timestamp: number;
   proposal: ScheduledResearchProposal;
 }
-type LiveItem = ProposalItem | ScheduledProposalItem | LiveActionItem;
+interface TradeRecommendationItem {
+  kind: "trade_recommendation";
+  timestamp: number;
+  recommendation: TradeRecommendation;
+}
+type LiveItem = ProposalItem | ScheduledProposalItem | TradeRecommendationItem | LiveActionItem;
 
 function isCriterionStatusMet(status: string): boolean {
   return !["", "pending", "open", "unsatisfied"].includes(status.toLowerCase());
@@ -1128,6 +1134,17 @@ export function Agent() {
         scrollToBottom();
       },
 
+      "trade.recommendation": (d) => {
+        touch();
+        const recommendation = d as unknown as TradeRecommendation;
+        if (!recommendation.recommendation_id || !recommendation.direction) return;
+        setLiveItems((items) => [
+          ...items,
+          { kind: "trade_recommendation", timestamp: Date.now(), recommendation },
+        ]);
+        scrollToBottom();
+      },
+
       "live.halted": (d) => {
         touch();
         const halted = d as unknown as LiveHalted;
@@ -1612,7 +1629,9 @@ export function Agent() {
         ? `${sessionId ?? "draft"}_lp_${item.proposal.proposal_id}`
         : item.kind === "scheduled_proposal"
           ? `${sessionId ?? "draft"}_srp_${item.proposal.proposal_id}`
-          : `${sessionId ?? "draft"}_la_${item.action.audit_id || item.timestamp}`;
+          : item.kind === "trade_recommendation"
+            ? `${sessionId ?? "draft"}_tr_${item.recommendation.recommendation_id}`
+            : `${sessionId ?? "draft"}_la_${item.action.audit_id || item.timestamp}`;
       rows.push({ sort: item.timestamp, render: "live", item, key });
     }
     return rows.sort((a, b) => a.sort - b.sort);
@@ -1756,6 +1775,13 @@ export function Agent() {
                 return (
                   <div key={row.key} className={shouldAnimate ? "msg-enter" : undefined}>
                     <ScheduledResearchProposalCard proposal={row.item.proposal} />
+                  </div>
+                );
+              }
+              if (row.item.kind === "trade_recommendation") {
+                return (
+                  <div key={row.key} className={shouldAnimate ? "msg-enter" : undefined}>
+                    <TradeRecommendationCard recommendation={row.item.recommendation} />
                   </div>
                 );
               }
