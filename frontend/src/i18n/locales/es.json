@@ -33,7 +33,45 @@
     "skipToMain": "Saltar al contenido principal",
     "sidebar": "Barra lateral de Vibe-Trading",
     "mainNavigation": "Navegación principal",
-    "about": "Acerca de"
+    "about": "Acerca de",
+    "daily": "Diario",
+    "more": "Más",
+    "ask": "Preguntar",
+    "today": "Escanear hoy",
+    "build": "Construir"
+  },
+  "desk": {
+    "feedUnreliable": "Feed OANDA no verificado — confirme los precios antes de actuar.",
+    "disclaimer": "No es asesoramiento financiero. El trading implica riesgo. La ejecución requiere confirmación explícita."
+  },
+  "symbolPicker": {
+    "select": "Seleccionar símbolo",
+    "search": "Buscar en catálogo OANDA…",
+    "empty": "Ningún instrumento coincide"
+  },
+  "today": {
+    "title": "Escanear hoy",
+    "subtitle": "Contexto diario del mercado — noticias, calendario y símbolo de referencia.",
+    "benchmark": "Referencia",
+    "scanning": "Contexto para {{symbol}}",
+    "news": "Titulares",
+    "calendar": "Calendario económico",
+    "loading": "Cargando…",
+    "newsEmpty": "Sin titulares aún — conecte feeds en Ajustes.",
+    "calendarEmpty": "Sin eventos de calendario hoy.",
+    "hint": "Use Preguntar con Escaneo rápido o Análisis profundo para ideas sobre su símbolo."
+  },
+  "build": {
+    "title": "Construir",
+    "subtitle": "Investigue, haga backtest y programe estrategias con las herramientas de Vibe-Trading.",
+    "alphaZoo": "Alpha Zoo",
+    "alphaZooBody": "Explore y compare alphas factoriales antes de codificar una estrategia.",
+    "scheduled": "Investigación programada",
+    "scheduledBody": "Automatice escaneos e investigaciones recurrentes.",
+    "reports": "Informes de ejecución",
+    "reportsBody": "Revise backtests, atribución y artefactos exportados.",
+    "settings": "Conexiones y claves",
+    "settingsBody": "Configure OANDA (análisis), MetaApi (ejecución) y proveedores LLM."
   },
   "runtime": {
     "monitorBadge": "Monitor de Runtime",
@@ -586,6 +624,8 @@
     "authRequired": "El acceso remoto a la API requiere una clave de API. Agrégala en Configuración, o ejecuta el backend en localhost para uso solo local.",
     "followUpPlaceholder": "Pregunta sobre esta ejecución — ej. ¿por qué el drawdown es tan profundo?",
     "continuePrompt": "Continúa desde donde te detuviste.",
+    "quickScan": "Escaneo rápido",
+    "deepAnalysis": "Análisis profundo",
     "doneMarker": "Ejecución completa",
     "backgroundRunComplete": "Una ejecución terminó en otra sesión.",
     "activity": {

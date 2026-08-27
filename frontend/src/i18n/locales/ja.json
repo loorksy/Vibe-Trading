@@ -28,7 +28,45 @@
     "skipToMain": "メインコンテンツへスキップ",
     "sidebar": "Vibe-Trading サイドバー",
     "mainNavigation": "メインナビゲーション",
-    "about": "概要"
+    "about": "概要",
+    "daily": "デイリー",
+    "more": "その他",
+    "ask": "質問",
+    "today": "今日のスキャン",
+    "build": "ビルド"
+  },
+  "desk": {
+    "feedUnreliable": "OANDA フィードが未検証です — 推奨に従う前に価格を確認してください。",
+    "disclaimer": "投資助言ではありません。取引にはリスクがあります。実行には明示的な確認が必要です。"
+  },
+  "symbolPicker": {
+    "select": "シンボルを選択",
+    "search": "OANDA カタログを検索…",
+    "empty": "一致する銘柄がありません"
+  },
+  "today": {
+    "title": "今日のスキャン",
+    "subtitle": "日次の市場コンテキスト — ニュース、カレンダー、ベンチマーク銘柄。",
+    "benchmark": "ベンチマーク",
+    "scanning": "{{symbol}} のコンテキスト",
+    "news": "ヘッドライン",
+    "calendar": "経済カレンダー",
+    "loading": "読み込み中…",
+    "newsEmpty": "ヘッドラインはまだありません — 設定でニュースフィードを接続してください。",
+    "calendarEmpty": "本日のカレンダーイベントはありません。",
+    "hint": "選択した銘柄のトレード案には「質問」でクイックスキャンまたは詳細分析を使ってください。"
+  },
+  "build": {
+    "title": "ビルド",
+    "subtitle": "Vibe-Trading ツールで研究、バックテスト、戦略のスケジュールを行います。",
+    "alphaZoo": "Alpha Zoo",
+    "alphaZooBody": "戦略をコーディングする前にファクター alpha を閲覧・比較します。",
+    "scheduled": "スケジュール研究",
+    "scheduledBody": "繰り返しのスキャンと研究ジョブを自動化します。",
+    "reports": "実行レポート",
+    "reportsBody": "バックテスト実行、帰属、エクスポート成果物を確認します。",
+    "settings": "接続とキー",
+    "settingsBody": "OANDA（分析）、MetaApi（実行）、LLM プロバイダーを設定します。"
   },
   "runtime": {
     "monitorBadge": "取引モニター",
@@ -581,6 +619,8 @@
     "authRequired": "リモート API へのアクセスには API キーが必要です。設定で追加するか、ローカルのみで使用する場合はバックエンドを localhost で実行してください。",
     "followUpPlaceholder": "この実行について質問する — 例：なぜドローダウンがこれほど深いのですか？",
     "continuePrompt": "停止したところから続行してください。",
+    "quickScan": "クイックスキャン",
+    "deepAnalysis": "詳細分析",
     "doneMarker": "実行完了",
     "backgroundRunComplete": "別のセッションで実行が完了しました。",
     "activity": {

@@ -25,6 +25,7 @@ _SDK_CONNECTOR_MODULES = {
     "shoonya": "src.trading.connectors.shoonya.sdk",
     "trading212": "src.trading.connectors.trading212.sdk",
     "mt5": "src.trading.connectors.mt5.sdk",
+    "metaapi": "src.trading.connectors.metaapi.sdk",
     "etoro": "src.trading.connectors.etoro.sdk",
 }
 

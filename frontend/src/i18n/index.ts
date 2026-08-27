@@ -9,6 +9,7 @@ import en from "./locales/en.json";
 // layout (sidebar on the right, etc.) when needed.
 export const SUPPORTED_LANGUAGES = [
   { code: "en", label: "English", dir: "ltr" as const },
+  { code: "tr", label: "Türkçe", dir: "ltr" as const },
   { code: "zh-CN", label: "中文", dir: "ltr" as const },
   { code: "ja", label: "日本語", dir: "ltr" as const },
   { code: "ko", label: "한국어", dir: "ltr" as const },
@@ -20,14 +21,17 @@ export const SUPPORTED_LANGUAGES = [
 export type SupportedLanguageCode = (typeof SUPPORTED_LANGUAGES)[number]["code"];
 type LazyLanguageCode = Exclude<SupportedLanguageCode, "en">;
 
+type LocaleBundle = Record<string, unknown>;
+
 const localeLoaders = {
+  tr: () => import("./locales/tr.json"),
   "zh-CN": () => import("./locales/zh-CN.json"),
   ja: () => import("./locales/ja.json"),
   ko: () => import("./locales/ko.json"),
   ar: () => import("./locales/ar.json"),
   es: () => import("./locales/es.json"),
   de: () => import("./locales/de.json"),
-} satisfies Record<LazyLanguageCode, () => Promise<{ default: typeof en }>>;
+} satisfies Record<LazyLanguageCode, () => Promise<{ default: LocaleBundle }>>;
 
 const LANGUAGE_STORAGE_KEY = "i18nextLng";
 const LOCALE_LOAD_ATTEMPTS = 2;

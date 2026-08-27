@@ -33,7 +33,45 @@
     "skipToMain": "Skip to main content",
     "sidebar": "Vibe-Trading sidebar",
     "mainNavigation": "Main navigation",
-    "about": "About"
+    "about": "About",
+    "daily": "Daily",
+    "more": "More",
+    "ask": "Ask",
+    "today": "Scan Today",
+    "build": "Build"
+  },
+  "desk": {
+    "feedUnreliable": "OANDA feed not verified — confirm prices before acting on recommendations.",
+    "disclaimer": "Not financial advice. Trading involves risk. Execution requires explicit confirmation."
+  },
+  "symbolPicker": {
+    "select": "Select symbol",
+    "search": "Search OANDA catalog…",
+    "empty": "No instruments match your search"
+  },
+  "today": {
+    "title": "Scan Today",
+    "subtitle": "Daily market context — news, calendar, and benchmark symbol.",
+    "benchmark": "Benchmark",
+    "scanning": "Context for {{symbol}}",
+    "news": "Headlines",
+    "calendar": "Economic calendar",
+    "loading": "Loading…",
+    "newsEmpty": "No headlines yet — connect news feeds in Settings.",
+    "calendarEmpty": "No calendar events for today.",
+    "hint": "Use Ask with Quick Scan or Deep Analysis for trade ideas on your selected symbol."
+  },
+  "build": {
+    "title": "Build",
+    "subtitle": "Research, backtest, and schedule strategies using Vibe-Trading tools.",
+    "alphaZoo": "Alpha Zoo",
+    "alphaZooBody": "Browse and compare factor alphas before coding a strategy.",
+    "scheduled": "Scheduled research",
+    "scheduledBody": "Automate recurring scans and research jobs.",
+    "reports": "Run reports",
+    "reportsBody": "Review backtest runs, attribution, and exported artifacts.",
+    "settings": "Connections & keys",
+    "settingsBody": "Configure OANDA (analysis), MetaApi (execution), and LLM providers."
   },
   "runtime": {
     "monitorBadge": "Runtime Monitor",
@@ -586,6 +624,8 @@
     "authRequired": "Remote API access requires an API key. Add it in Settings, or run the backend on localhost for local-only use.",
     "followUpPlaceholder": "Ask about this run — e.g. why is the drawdown so deep?",
     "continuePrompt": "Continue from where you stopped.",
+    "quickScan": "Quick Scan",
+    "deepAnalysis": "Deep Analysis",
     "doneMarker": "Run complete",
     "backgroundRunComplete": "A run finished in another session.",
     "activity": {

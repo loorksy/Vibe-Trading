@@ -1,0 +1,72 @@
+{
+  "layout": {
+    "daily": "Günlük",
+    "more": "Daha fazla",
+    "ask": "Sor",
+    "today": "Bugünü Tara",
+    "build": "Oluştur",
+    "agent": "Ajan",
+    "runtime": "Çalışma Zamanı",
+    "scheduled": "Zamanlanmış",
+    "reports": "Raporlar",
+    "portfolio": "Portföy",
+    "alphaZoo": "Alpha Zoo",
+    "settings": "Ayarlar",
+    "correlation": "Korelasyon Matrisi",
+    "optionsLab": "Opsiyon Laboratuvarı",
+    "sessions": "Oturumlar",
+    "newChat": "Yeni Sohbet",
+    "noSessions": "Henüz sohbet yok — başlamak için + tuşuna basın",
+    "confirm": "Onayla",
+    "cancel": "İptal",
+    "rename": "Yeniden adlandır",
+    "delete": "Sil",
+    "light": "Açık",
+    "dark": "Koyu",
+    "language": "Dil",
+    "collapse": "Daralt",
+    "expand": "Genişlet",
+    "skipToMain": "Ana içeriğe geç",
+    "sidebar": "Vibe-Trading kenar çubuğu",
+    "mainNavigation": "Ana gezinme",
+    "about": "Hakkında"
+  },
+  "desk": {
+    "feedUnreliable": "OANDA akışı doğrulanmadı — önerilere göre hareket etmeden önce fiyatları doğrulayın.",
+    "disclaimer": "Finansal tavsiye değildir. İşlem risk içerir. Yürütme açık onay gerektirir."
+  },
+  "symbolPicker": {
+    "select": "Sembol seç",
+    "search": "OANDA kataloğunda ara…",
+    "empty": "Eşleşen enstrüman yok"
+  },
+  "today": {
+    "title": "Bugünü Tara",
+    "subtitle": "Günlük piyasa bağlamı — haberler, takvim ve kıyaslama sembolü.",
+    "benchmark": "Kıyaslama",
+    "scanning": "{{symbol}} için bağlam",
+    "news": "Manşetler",
+    "calendar": "Ekonomik takvim",
+    "loading": "Yükleniyor…",
+    "newsEmpty": "Henüz manşet yok — Ayarlar'dan haber akışlarını bağlayın.",
+    "calendarEmpty": "Bugün için takvim etkinliği yok.",
+    "hint": "Seçili sembol için işlem fikirleri için Hızlı Tarama veya Derin Analiz ile Sor'u kullanın."
+  },
+  "build": {
+    "title": "Oluştur",
+    "subtitle": "Vibe-Trading araçlarıyla araştırma, geri test ve strateji zamanlama.",
+    "alphaZoo": "Alpha Zoo",
+    "alphaZooBody": "Strateji kodlamadan önce faktör alfalarını inceleyin ve karşılaştırın.",
+    "scheduled": "Zamanlanmış araştırma",
+    "scheduledBody": "Tekrarlayan tarama ve araştırma işlerini otomatikleştirin.",
+    "reports": "Çalıştırma raporları",
+    "reportsBody": "Geri test çalışmalarını, atıfı ve dışa aktarılan çıktıları inceleyin.",
+    "settings": "Bağlantılar ve anahtarlar",
+    "settingsBody": "OANDA (analiz), MetaApi (yürütme) ve LLM sağlayıcılarını yapılandırın."
+  },
+  "agent": {
+    "quickScan": "Hızlı Tarama",
+    "deepAnalysis": "Derin Analiz",
+    "continuePrompt": "Kaldığın yerden devam et."
+  }
+}

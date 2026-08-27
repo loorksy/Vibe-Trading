@@ -54,6 +54,7 @@ VALID_SOURCES: set[str] = {
     "pykrx",
     "longbridge",
     "mt5",
+    "oanda",
     "tickerall",
     "local",
     "auto",
@@ -109,6 +110,7 @@ def _ensure_registered() -> None:
         "backtest.loaders.pykrx_loader",
         "backtest.loaders.longbridge",
         "backtest.loaders.mt5_loader",
+        "backtest.loaders.oanda_loader",
         "backtest.loaders.tickerall_loader",
         "backtest.loaders.local_loader",
     ]
@@ -161,7 +163,7 @@ FALLBACK_CHAINS: dict[str, list[str]] = {
     "macro":     ["akshare", "tushare", "local"],
     # mt5 leads when a local MetaTrader 5 terminal is attached (Windows-only,
     # broker feed); otherwise it reports unavailable and the chain proceeds.
-    "forex":     ["mt5", "akshare", "yfinance", "local"],
+    "forex":     ["oanda", "mt5", "akshare", "yfinance", "local"],
 }
 
 

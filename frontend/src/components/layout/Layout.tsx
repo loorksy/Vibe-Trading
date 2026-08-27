@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router";
-import { Activity, BarChart3, Bot, CalendarClock, CandlestickChart, Check, ChevronDown, FileText, Languages, Moon, Sun, Plus, Trash2, Pencil, MessageSquare, ChevronsLeft, ChevronsRight, Settings, Layers, Loader2, WalletCards } from "lucide-react";
+import { Activity, BarChart3, Bot, CalendarClock, CandlestickChart, Check, ChevronDown, FileText, Hammer, Languages, Moon, Sun, Plus, Trash2, Pencil, MessageSquare, ChevronsLeft, ChevronsRight, Settings, Layers, Loader2, WalletCards, ScanSearch } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDarkMode } from "@/hooks/useDarkMode";
 import { api, type SessionItem } from "@/lib/api";
@@ -9,6 +9,8 @@ import { safeGet, safeSet } from "@/lib/storage";
 import { useAgentStore } from "@/stores/agent";
 import { BrandMark } from "@/components/common/BrandMark";
 import { ConnectionBanner } from "@/components/layout/ConnectionBanner";
+import { FeedHealthBanner } from "@/components/layout/FeedHealthBanner";
+import { TradingDisclaimer } from "@/components/layout/TradingDisclaimer";
 import { SUPPORTED_LANGUAGES } from "@/i18n";
 
 // APP_VERSION is sourced from i18n locale files (app.version key) to keep a
@@ -19,16 +21,20 @@ export function Layout() {
 
   // "/" is the product (chat); marketing moved to /about. The Agent entry
   // matches both "/" and legacy "/agent" deep links.
-  const NAV = [
-    { to: "/", icon: Bot, label: t('layout.agent') },
-    { to: "/runtime", icon: Activity, label: t('layout.runtime') },
-    { to: "/scheduled", icon: CalendarClock, label: t('layout.scheduled') },
-    { to: "/reports", icon: FileText, label: t('layout.reports') },
-    { to: "/portfolio", icon: WalletCards, label: t('layout.portfolio') },
-    { to: "/alpha-zoo", icon: Layers, label: t('layout.alphaZoo') },
-    { to: "/options", icon: CandlestickChart, label: t('layout.optionsLab') },
-    { to: "/settings", icon: Settings, label: t('layout.settings') },
-    { to: "/correlation", icon: BarChart3, label: t('layout.correlation') },
+  const DAILY_NAV = [
+    { to: "/", icon: Bot, label: t("layout.ask") },
+    { to: "/today", icon: ScanSearch, label: t("layout.today") },
+    { to: "/build", icon: Hammer, label: t("layout.build") },
+  ];
+  const MORE_NAV = [
+    { to: "/runtime", icon: Activity, label: t("layout.runtime") },
+    { to: "/scheduled", icon: CalendarClock, label: t("layout.scheduled") },
+    { to: "/reports", icon: FileText, label: t("layout.reports") },
+    { to: "/portfolio", icon: WalletCards, label: t("layout.portfolio") },
+    { to: "/alpha-zoo", icon: Layers, label: t("layout.alphaZoo") },
+    { to: "/options", icon: CandlestickChart, label: t("layout.optionsLab") },
+    { to: "/settings", icon: Settings, label: t("layout.settings") },
+    { to: "/correlation", icon: BarChart3, label: t("layout.correlation") },
   ];
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
@@ -131,7 +137,41 @@ export function Layout() {
           aria-label={t('layout.mainNavigation', { defaultValue: 'Main navigation' })}
           className={cn("space-y-0.5", collapsed ? "p-1" : "p-2 max-md:p-1")}
         >
-          {NAV.map(({ to, icon: Icon, label }) => {
+          {!collapsed && (
+            <p className="px-3 pt-1 pb-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground/70 max-md:hidden">
+              {t("layout.daily")}
+            </p>
+          )}
+          {DAILY_NAV.map(({ to, icon: Icon, label }) => {
+            const text = label;
+            const active = to === "/"
+              ? pathname === "/" || pathname.startsWith("/agent")
+              : pathname.startsWith(to);
+            return (
+              <Link
+                key={to}
+                to={to}
+                aria-label={text}
+                className={cn(
+                  "flex items-center rounded-md text-[13px] transition-colors",
+                  collapsed ? "justify-center px-2 py-1.5" : "gap-3 px-3 py-1.5 max-md:justify-center max-md:px-2",
+                  active
+                    ? "bg-primary/10 text-primary font-medium"
+                    : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                )}
+                title={collapsed ? text : undefined}
+              >
+                <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                {!collapsed && <span className="max-md:hidden">{text}</span>}
+              </Link>
+            );
+          })}
+          {!collapsed && (
+            <p className="px-3 pt-3 pb-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground/70 max-md:hidden">
+              {t("layout.more")}
+            </p>
+          )}
+          {MORE_NAV.map(({ to, icon: Icon, label }) => {
             const text = label;
             return (
               <Link
@@ -141,7 +181,7 @@ export function Layout() {
                 className={cn(
                   "flex items-center rounded-md text-[13px] transition-colors",
                   collapsed ? "justify-center px-2 py-1.5" : "gap-3 px-3 py-1.5 max-md:justify-center max-md:px-2",
-                  (to === "/" ? pathname === "/" || pathname.startsWith("/agent") : pathname.startsWith(to))
+                  pathname.startsWith(to)
                     ? "bg-primary/10 text-primary font-medium"
                     : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
                 )}
@@ -308,9 +348,11 @@ export function Layout() {
       {/* Main */}
       <div className="relative flex-1 flex flex-col overflow-hidden">
         <ConnectionBanner status={sseStatus} retryAttempt={sseRetryAttempt} />
+        <FeedHealthBanner />
         <main id="main" className="flex-1 overflow-auto">
           <Outlet />
         </main>
+        <TradingDisclaimer />
       </div>
     </div>
   );

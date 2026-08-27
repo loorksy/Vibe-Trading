@@ -317,6 +317,13 @@ function appendQueryParam(url: string, key: string, value: string): string {
   return `${url}${sep}${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
 }
 
+export interface OandaInstrument {
+  canonical_id: string;
+  display_symbol: string;
+  asset_class: string;
+  tradable: boolean;
+}
+
 export const api = {
   uploadFile,
   getCorrelation: (codes: string, days: number, method: "pearson" | "spearman") =>
@@ -389,6 +396,10 @@ export const api = {
   autoTitleSession: (sid: string) => request<{ status: string; title: string }>(`/sessions/${sid}/title/auto`, { method: "POST" }),
   // Scheduled research: cadence + timezone are stored as authored (local
   // wall-clock cron + IANA key), so list rows render without any UTC math.
+  listOandaInstruments: (q?: string) =>
+    request<OandaInstrument[]>(
+      `/api/oanda/instruments${q ? `?q=${encodeURIComponent(q)}` : ""}`,
+    ),
   listScheduledRuns: (signal?: AbortSignal) => request<ScheduledRun[]>("/scheduled-runs", { signal }),
   createScheduledRun: (body: CreateScheduledRunRequest) =>
     request<ScheduledRun>("/scheduled-runs", { method: "POST", body: JSON.stringify(body) }),

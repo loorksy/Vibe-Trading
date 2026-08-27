@@ -33,7 +33,45 @@
     "sidebar": "Vibe-Trading-Seitenleiste",
     "mainNavigation": "Hauptnavigation",
     "about": "Über",
-    "portfolio": "Portfolio"
+    "portfolio": "Portfolio",
+    "daily": "Täglich",
+    "more": "Mehr",
+    "ask": "Fragen",
+    "today": "Heute scannen",
+    "build": "Erstellen"
+  },
+  "desk": {
+    "feedUnreliable": "OANDA-Feed nicht verifiziert — Preise vor Handeln bestätigen.",
+    "disclaimer": "Keine Finanzberatung. Trading birgt Risiken. Ausführung erfordert ausdrückliche Bestätigung."
+  },
+  "symbolPicker": {
+    "select": "Symbol wählen",
+    "search": "OANDA-Katalog durchsuchen…",
+    "empty": "Keine passenden Instrumente"
+  },
+  "today": {
+    "title": "Heute scannen",
+    "subtitle": "Täglicher Marktkontext — Nachrichten, Kalender und Benchmark-Symbol.",
+    "benchmark": "Benchmark",
+    "scanning": "Kontext für {{symbol}}",
+    "news": "Schlagzeilen",
+    "calendar": "Wirtschaftskalender",
+    "loading": "Laden…",
+    "newsEmpty": "Noch keine Schlagzeilen — News-Feeds in Einstellungen verbinden.",
+    "calendarEmpty": "Keine Kalenderereignisse heute.",
+    "hint": "Nutzen Sie Fragen mit Schnellscan oder Tiefenanalyse für Handelsideen zu Ihrem Symbol."
+  },
+  "build": {
+    "title": "Erstellen",
+    "subtitle": "Forschung, Backtests und Strategieplanung mit Vibe-Trading-Tools.",
+    "alphaZoo": "Alpha Zoo",
+    "alphaZooBody": "Faktor-Alphas durchsuchen und vergleichen, bevor Sie eine Strategie codieren.",
+    "scheduled": "Geplante Forschung",
+    "scheduledBody": "Wiederkehrende Scans und Forschungsjobs automatisieren.",
+    "reports": "Laufberichte",
+    "reportsBody": "Backtest-Läufe, Attribution und exportierte Artefakte prüfen.",
+    "settings": "Verbindungen & Schlüssel",
+    "settingsBody": "OANDA (Analyse), MetaApi (Ausführung) und LLM-Anbieter konfigurieren."
   },
   "runtime": {
     "monitorBadge": "Runtime-Monitor",
@@ -586,6 +624,8 @@
     "authRequired": "Remote-API-Zugriff erfordert einen API-Schlüssel. Fügen Sie ihn in den Einstellungen hinzu, oder betreiben Sie das Backend auf localhost für rein lokale Nutzung.",
     "followUpPlaceholder": "Fragen Sie diesen Durchlauf — z. B. warum ist der Drawdown so tief?",
     "continuePrompt": "Von dort fortfahren, wo Sie gestoppt haben.",
+    "quickScan": "Schnellscan",
+    "deepAnalysis": "Tiefenanalyse",
     "doneMarker": "Durchlauf abgeschlossen",
     "backgroundRunComplete": "Ein Durchlauf wurde in einer anderen Sitzung abgeschlossen.",
     "activity": {

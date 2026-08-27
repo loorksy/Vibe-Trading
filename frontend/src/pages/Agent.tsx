@@ -21,6 +21,9 @@ import { AgentAvatar } from "@/components/chat/AgentAvatar";
 import { WelcomeScreen } from "@/components/chat/WelcomeScreen";
 import { MarkdownContent, MessageBubble } from "@/components/chat/MessageBubble";
 import { ModelRuntimeBar } from "@/components/chat/ModelRuntimeBar";
+import { SymbolPicker } from "@/components/common/SymbolPicker";
+import { safeGet, safeSet } from "@/lib/storage";
+import { cn } from "@/lib/utils";
 import { ThinkingTimeline } from "@/components/chat/ThinkingTimeline";
 import { ConversationTimeline } from "@/components/chat/ConversationTimeline";
 import { ActivityLine } from "@/components/chat/ActivityLine";
@@ -118,6 +121,9 @@ const GOAL_CONTINUE_PREFIX = [
   "",
   "Goal: ",
 ].join("\n");
+const QUICK_SCAN_PREFIX = "[Quick Scan] ";
+const DEEP_ANALYSIS_PREFIX = "[Deep Analysis] ";
+const SELECTED_SYMBOL_KEY = "vibe-selected-symbol";
 
 function toDisplayPrompt(content: string): {
   content: string;
@@ -246,6 +252,8 @@ export function Agent() {
   const [swarmPreset, setSwarmPreset] = useState<{ name: string; title: string } | null>(null);
   const [goalComposerActive, setGoalComposerActive] = useState(false);
   const [goalSnapshot, setGoalSnapshot] = useState<GoalSnapshot | null>(null);
+  const [selectedSymbol, setSelectedSymbol] = useState(() => safeGet(SELECTED_SYMBOL_KEY) || "");
+  const [analysisMode, setAnalysisMode] = useState<"quick" | "deep">("quick");
 
   /* Connector runtime channel state (SPEC Consent §1/§4/§5) */
   const [liveItems, setLiveItems] = useState<LiveItem[]>([]);
@@ -1326,6 +1334,17 @@ export function Agent() {
     const displayPrompt = toDisplayPrompt(prompt);
     const messageMeta: AgentMessageMeta = { ...displayPrompt.meta };
 
+    if (selectedSymbol) {
+      finalPrompt = `[Symbol: ${selectedSymbol}] ${finalPrompt}`;
+    }
+    if (analysisMode === "quick") {
+      finalPrompt = `${QUICK_SCAN_PREFIX}${finalPrompt}`;
+      messageMeta.analysisMode = "quick";
+    } else {
+      finalPrompt = `${DEEP_ANALYSIS_PREFIX}${finalPrompt}`;
+      messageMeta.analysisMode = "deep";
+    }
+
     // Swarm mode: let agent auto-select the right preset
     if (swarmPreset) {
       messageMeta.swarmMode = true;
@@ -1636,6 +1655,43 @@ export function Agent() {
         runtimeModel={visibleRuntimeIdentity.model}
         runtimeReasoningEffort={visibleRuntimeIdentity.reasoningEffort}
       />
+      <div className="border-b border-border/60 bg-background/80 px-4 py-2">
+        <div className="mx-auto flex max-w-3xl flex-wrap items-center gap-3">
+          <SymbolPicker
+            value={selectedSymbol}
+            onChange={(canonicalId) => {
+              setSelectedSymbol(canonicalId);
+              safeSet(SELECTED_SYMBOL_KEY, canonicalId);
+            }}
+          />
+          <div className="flex items-center rounded-lg border border-border p-0.5 text-xs">
+            <button
+              type="button"
+              onClick={() => setAnalysisMode("quick")}
+              className={cn(
+                "rounded-md px-3 py-1.5 transition-colors",
+                analysisMode === "quick"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              {t("agent.quickScan")}
+            </button>
+            <button
+              type="button"
+              onClick={() => setAnalysisMode("deep")}
+              className={cn(
+                "rounded-md px-3 py-1.5 transition-colors",
+                analysisMode === "deep"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              {t("agent.deepAnalysis")}
+            </button>
+          </div>
+        </div>
+      </div>
       <div
         ref={listRef}
         data-streaming={status === "streaming" ? "true" : undefined}

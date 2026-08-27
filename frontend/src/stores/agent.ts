@@ -48,6 +48,7 @@ export interface AgentMessageMeta {
   attachments?: Array<{ filename: string }>;
   swarmMode?: boolean;
   goalMode?: boolean;
+  analysisMode?: "quick" | "deep";
   requestText?: string;
   activity?: AgentActivity;
   partialAttemptId?: string;

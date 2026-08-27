@@ -28,7 +28,45 @@
     "skipToMain": "본문으로 건너뛰기",
     "sidebar": "Vibe-Trading 사이드바",
     "mainNavigation": "주 내비게이션",
-    "about": "소개"
+    "about": "소개",
+    "daily": "일일",
+    "more": "더보기",
+    "ask": "질문",
+    "today": "오늘 스캔",
+    "build": "빌드"
+  },
+  "desk": {
+    "feedUnreliable": "OANDA 피드가 검증되지 않았습니다 — 권장에 따라 행동하기 전에 가격을 확인하세요.",
+    "disclaimer": "투자 조언이 아닙니다. 거래에는 위험이 따릅니다. 실행에는 명시적 확인이 필요합니다."
+  },
+  "symbolPicker": {
+    "select": "심볼 선택",
+    "search": "OANDA 카탈로그 검색…",
+    "empty": "일치하는 상품이 없습니다"
+  },
+  "today": {
+    "title": "오늘 스캔",
+    "subtitle": "일일 시장 맥락 — 뉴스, 캘린더, 벤치마크 심볼.",
+    "benchmark": "벤치마크",
+    "scanning": "{{symbol}} 맥락",
+    "news": "헤드라인",
+    "calendar": "경제 캘린더",
+    "loading": "로딩 중…",
+    "newsEmpty": "헤드라인이 없습니다 — 설정에서 뉴스 피드를 연결하세요.",
+    "calendarEmpty": "오늘 캘린더 이벤트가 없습니다.",
+    "hint": "선택한 심볼에 대한 거래 아이디어는 빠른 스캔 또는 심층 분석과 함께 질문을 사용하세요."
+  },
+  "build": {
+    "title": "빌드",
+    "subtitle": "Vibe-Trading 도구로 연구, 백테스트, 전략 예약.",
+    "alphaZoo": "Alpha Zoo",
+    "alphaZooBody": "전략을 코딩하기 전에 팩터 알파를 탐색하고 비교합니다.",
+    "scheduled": "예약된 연구",
+    "scheduledBody": "반복 스캔 및 연구 작업을 자동화합니다.",
+    "reports": "실행 보고서",
+    "reportsBody": "백테스트 실행, 기여도 및보낸 산출물을 검토합니다.",
+    "settings": "연결 및 키",
+    "settingsBody": "OANDA(분석), MetaApi(실행), LLM 제공자를 구성합니다."
   },
   "runtime": {
     "monitorBadge": "거래 모니터",
@@ -581,6 +619,8 @@
     "authRequired": "원격 API에 접근하려면 API 키가 필요합니다. 설정에서 추가하거나, 로컬에서만 사용할 경우 백엔드를 localhost에서 실행하세요.",
     "followUpPlaceholder": "이 실행에 대해 질문하세요 — 예: 낙폭이 왜 이렇게 큰가요?",
     "continuePrompt": "중단한 지점부터 계속하세요.",
+    "quickScan": "빠른 스캔",
+    "deepAnalysis": "심층 분석",
     "doneMarker": "실행 완료",
     "backgroundRunComplete": "다른 세션의 실행이 완료되었습니다.",
     "activity": {
