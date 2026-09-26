@@ -58,6 +58,7 @@ vi.mock("@/lib/api", () => ({
     ]),
     deleteSession: vi.fn().mockResolvedValue(undefined),
     renameSession: vi.fn().mockResolvedValue(undefined),
+    getFeedHealth: vi.fn().mockResolvedValue({ reliable: true, canonical_id: "EUR_USD" }),
   },
 }));
 

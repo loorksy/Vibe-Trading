@@ -130,7 +130,7 @@ fi
 
 # -------------------------------------------------------------- gate (e)
 echo "[gate e] no raw os.getenv / os.environ reads outside config layer ..."
-E_OUTPUT=$(python tools/ci_env_var_gate.py 2>&1)
+E_OUTPUT=$(python3 tools/ci_env_var_gate.py 2>&1)
 E_RC=$?
 if [ "$E_RC" -ne 0 ]; then
     echo "${RED}FAIL${NC}: raw env-var reads outside agent/src/config/:"

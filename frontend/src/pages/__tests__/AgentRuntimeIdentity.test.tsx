@@ -19,7 +19,15 @@ const sseMock = vi.hoisted(() => ({
 
 vi.mock("@/lib/api", async () => {
   const actual = await vi.importActual<typeof import("@/lib/api")>("@/lib/api");
-  return { ...actual, api: apiMock };
+  return {
+    ...actual,
+    api: {
+      ...actual.api,
+      ...apiMock,
+      listOandaInstruments: vi.fn().mockResolvedValue([]),
+      getFeedHealth: vi.fn().mockResolvedValue({ reliable: true, canonical_id: "EUR_USD" }),
+    },
+  };
 });
 
 vi.mock("@/hooks/useSSE", () => ({

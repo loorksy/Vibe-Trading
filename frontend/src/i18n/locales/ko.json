@@ -1644,5 +1644,17 @@
       "delete": "삭제",
       "configured": "필요한 자격 증명이 설정되었습니다"
     }
+  },
+  "trade": {
+    "recommendationTitle": "Trade recommendation",
+    "entryZone": "Entry zone",
+    "stopLoss": "Stop loss",
+    "volumeLots": "Volume (lots)",
+    "execute": "Execute via MetaApi",
+    "executing": "Submitting…",
+    "executed": "Order submitted",
+    "executedBadge": "Executed",
+    "notExecutable": "Gates blocked execution or the setup is stale.",
+    "invalidVolume": "Enter a valid lot size"
   }
 }
